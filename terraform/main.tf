@@ -1,3 +1,4 @@
+# Local variables to hold common configuration items
 locals {
   cluster_name = "bluebirdhotel"
 
@@ -8,8 +9,10 @@ locals {
   azs      = slice(data.aws_availability_zones.available.names, 0, 2)
 }
 
+# Data source to get a list of available AWS availability zones
 data "aws_availability_zones" "available" {}
 
+# Module to create a VPC with public, private, and database subnets
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "5.8.1"
@@ -34,6 +37,7 @@ module "vpc" {
   instance_tenancy = "default"
 }
 
+# Module to create an EKS cluster with configuration for node groups and cluster access
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "20.9.0"
@@ -55,6 +59,7 @@ module "eks" {
   eks_managed_node_groups = var.workers_config
 }
 
+# Resource for creating an AWS ECR repository for Docker images
 resource "aws_ecr_repository" "app" {
   name                 = var.repository_name
   image_tag_mutability = var.image_tag_mutability
@@ -65,6 +70,7 @@ resource "aws_ecr_repository" "app" {
   }
 }
 
+# Module to create an RDS instance with configurations for MySQL engine
 module "db" {
   source     = "terraform-aws-modules/rds/aws"
   version    = "6.6.0"
@@ -75,7 +81,6 @@ module "db" {
   family               = "mysql8.0"
   major_engine_version = "8.0"
   instance_class       = "db.t4g.micro"
-  publicly_accessible  = true
 
   allocated_storage     = 20
   max_allocated_storage = 100
@@ -84,7 +89,6 @@ module "db" {
   username = var.rds_master_user
   password = var.rds_password
   port     = 3306
-
 
   manage_master_user_password = false
   storage_encrypted           = false
@@ -98,6 +102,7 @@ module "db" {
   depends_on          = [module.mysql_security_group]
 }
 
+# Module to create a security group for MySQL, allowing access from within the VPC
 module "mysql_security_group" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "~> 5.0"
@@ -114,16 +119,11 @@ module "mysql_security_group" {
       protocol    = "tcp"
       description = "MySQL access from within VPC"
       cidr_blocks = module.vpc.vpc_cidr_block
-    },
-    {
-      from_port   = 3306
-      to_port     = 3306
-      protocol    = "tcp"
-      cidr_blocks = "0.0.0.0/0"
     }
   ]
 }
 
+# Module to deploy the NGINX Ingress Controller using Helm, configuring annotations for AWS NLB
 module "nginx-controller" {
   source     = "terraform-iaac/nginx-controller/helm"
   version    = "2.3.0"

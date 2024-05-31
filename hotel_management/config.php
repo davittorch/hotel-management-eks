@@ -1,5 +1,6 @@
 <?php
 
+// Pass in your RDS credentials
 $server = "Your RDS Endpoint";
 $username = "Your RDS Username";
 $password = "Your RDS Password";
