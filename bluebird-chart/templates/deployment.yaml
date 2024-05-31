@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "bluebird-chart.fullname" . }}
+  labels:
+    app: {{ include "bluebird-chart.name" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "bluebird-chart.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "bluebird-chart.name" . }}
+    spec:
+      containers:
+        - name: {{ include "bluebird-chart.name" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          envFrom:
+            - secretRef:
+                name: "{{ .Values.secret.name }}"
+          ports:
+            - containerPort: 80

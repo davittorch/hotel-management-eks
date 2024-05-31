@@ -1,0 +1,32 @@
+
+replicaCount: 1
+
+image:
+  repository: "Your ECR Repo URI"
+  pullPolicy: Always
+  tag: "v1.0"
+
+service:
+  type: ClusterIP 
+  port: 80
+  targetPort: 80
+
+# pass your rds crenetials
+secret:
+  name: bluebird-rds-secret
+  data:
+    DB_SERVER: "Your Rds Endpoint"
+    DB_USERNAME: "Your Rds Username"
+    DB_PASSWORD: "Your Rds Password"
+    DB_DATABASE: "Your Rds DB Name"
+
+ingress:
+  enabled: true
+  annotations: 
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  hosts:
+    - host: "Your ELB Endpoint"
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
