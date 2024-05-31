@@ -3,7 +3,7 @@
 This repository contains the necessary components to deploy a Hotel Management PHP application on Amazon EKS using RDS for database management. The project is structured into three main parts:
 - **Application code** (`hotel_management` folder)
 - **Terraform infrastructure code** (in the `terraform` folder)
-- **Helm chart** for application deployment (`bluebird-chart` folder)
+- **Helm chart** for application deployment (`bluebird_chart` folder)
 
 ## Prerequisites
 
@@ -15,7 +15,7 @@ This repository contains the necessary components to deploy a Hotel Management P
 ## Configuration Files
 
 Ensure the following configuration files are updated before deployment:
-- `values.yaml` in the Helm chart folder(bluebird-chart)
+- `values.yaml` in the Helm chart folder(bluebird_chart)
 - `variables.tf` RDS related variables in the Terraform folder(terraform)
 - `config.php` in the Application folder(hotel_management)
 
@@ -37,7 +37,7 @@ Ensure the following configuration files are updated before deployment:
 3. **Deploy with Helm:**
    Update the `values.yaml` file with the RDS endpoint and user credentials, then deploy using Helm:
    ```bash
-   cd ../bluebird-chart
+   cd ../bluebird_chart
    helm install bluebird-release .
 
 4. **Access the Application:**
