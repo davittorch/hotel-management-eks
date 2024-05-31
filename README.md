@@ -35,7 +35,7 @@ Ensure the following configuration files are updated before deployment:
    docker push your-ecr-repo-url/hotel-management:latest
 
 3. **Deploy with Helm:**
-   Update the `values.yaml` file with the RDS endpoint and user credentials, then deploy using Helm:
+   Update the `values.yaml` file with the docker image from ECR, RDS endpoint and user credentials, then deploy using Helm:
    ```bash
    cd ../bluebird_chart
    helm install bluebird-release .
